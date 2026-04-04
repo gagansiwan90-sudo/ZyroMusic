@@ -56,6 +56,16 @@
         "description": "Your Log Group ID, add your bot and promote as an admin with full rights!. Channel ki id mat daal dena bsdk.",
         "value": "",
         "required": true
+      },
+      "YTPROXY_URL": {
+        "description": "YTProxy URL",
+        "value": "https://tgapi.xbitcode.com",
+        "required": true
+      },
+      "YT_API_KEY": {
+        "description": "API Key like xbit_xxx",
+        "value": "",
+        "required": true
       }
     },
     "buildpacks": [
