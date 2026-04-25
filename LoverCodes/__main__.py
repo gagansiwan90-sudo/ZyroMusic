@@ -1,6 +1,7 @@
 import asyncio
 import importlib
 
+from aiohttp import web
 from pyrogram import idle
 from pytgcalls.exceptions import NoActiveGroupCall
 
@@ -13,6 +14,21 @@ from LoverCodes.utils.database import get_banned_users, get_gbanned
 from config import BANNED_USERS
 
 
+# ── Render health-check server ──────────────────────────────────────────────
+async def health(request):
+    return web.Response(text="OK")
+
+
+async def run_web():
+    server = web.Application()
+    server.router.add_get("/", health)
+    runner = web.AppRunner(server)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", 8080)
+    await site.start()
+# ────────────────────────────────────────────────────────────────────────────
+
+
 async def init():
     if (
         not config.STRING1
@@ -23,6 +39,10 @@ async def init():
     ):
         LOGGER(__name__).error("𝐒𝐭𝐫𝐢𝐧𝐠 𝐒𝐞𝐬𝐬𝐢𝐨𝐧 𝐍𝐨𝐭 𝐅𝐢𝐥𝐥𝐞𝐝, 𝐏𝐥𝐞𝐚𝐬𝐞 𝐅𝐢𝐥𝐥 𝐀 𝐏𝐲𝐫𝐨𝐠𝐫𝐚𝐦 𝐒𝐞𝐬𝐬𝐢𝐨𝐧")
         exit()
+
+    # Start health-check server so Render stops scanning for port 8080
+    await run_web()
+
     await sudo()
     try:
         users = await get_gbanned()
@@ -61,3 +81,4 @@ async def init():
 
 if __name__ == "__main__":
     asyncio.get_event_loop().run_until_complete(init())
+        
